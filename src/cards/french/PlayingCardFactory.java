@@ -16,7 +16,10 @@
 package cards.french;
 
 import cards.util.CardDeck;
+import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
+import static java.util.concurrent.ThreadLocalRandom.current;
 
 /**
  *
@@ -29,11 +32,17 @@ public class PlayingCardFactory {
      *
      * @return
      */
-    public static Set<PlayingCard> getDeck() {
+    public static CardDeck<PlayingCard> getDeck() {
         return getDeck(false);
     }
 
-    public static Set<PlayingCard> getDeck(boolean includeJokers) {
+    /**
+     * Returns either a 52 or 54 card deck, Jokers depending.
+     *
+     * @param includeJokers - Whether or not to include Jokers.
+     * @return
+     */
+    public static CardDeck<PlayingCard> getDeck(boolean includeJokers) {
         CardDeck<PlayingCard> deck = new CardDeck<>();
 
         PlayingCardUtils.getSuitOrder().stream().forEach((currentSuit) -> {
@@ -43,7 +52,10 @@ public class PlayingCardFactory {
         });
 
         if (includeJokers) {
-
+            //Variety is the spice of life. Even? Clubs. Odd? Spades 1-50 Diamonds, 51-100 Hearts
+            int determinant = ThreadLocalRandom.current().nextInt(1, 101);
+            deck.add(new PlayingCard(PlayingCard.Rank.JOKER, determinant % 2 == 0 ? PlayingCard.Suit.CLUBS : PlayingCard.Suit.SPADES));
+            deck.add(new PlayingCard(PlayingCard.Rank.JOKER, determinant > 50 ? PlayingCard.Suit.HEARTS : PlayingCard.Suit.DIAMONDS));
         }
         return deck;
     }
