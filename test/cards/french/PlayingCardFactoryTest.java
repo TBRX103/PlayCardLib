@@ -34,8 +34,7 @@ public class PlayingCardFactoryTest {
     @Test
     public void testNewDeckOrder() {
         CardDeck<PlayingCard> deck = PlayingCardFactory.getDeck();
-        int i = deck.size();
-        assertEquals(52, i); //Check deck size.
+        assertEquals(52, deck.size()); //Check deck size.
         Iterator<PlayingCard> it = deck.iterator();
         PlayingCard curCard;
         for (Suit suit : PlayingCardUtils.getSuitOrder()) {

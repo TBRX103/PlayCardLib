@@ -1,6 +1,6 @@
 package cards;
 
-import java.util.Comparator;
+import java.util.UUID;
 
 /*
  * Copyright 2015 Benjamin Schellenberger <benrain@gmail.com>.
@@ -24,7 +24,21 @@ import java.util.Comparator;
  */
 public abstract class Card {
 
+    protected final UUID uuid = UUID.randomUUID();
+
     abstract public String getPrintableName();
 
     abstract public CardType getCardType();
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof Card)) {
+            return false;
+        }
+
+        return uuid.equals(((Card) obj).uuid);
+    }
 }

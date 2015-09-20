@@ -13,33 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cards.util;
+package cards.management;
 
 import cards.french.PlayingCard;
 import cards.french.PlayingCardFactory;
-import org.junit.Assert;
-import org.junit.Test;
+import cards.util.CardDeck;
 
 /**
  *
  * @author Benjamin Schellenberger <benrain@gmail.com>
  */
-public class CardDeckTest {
+public class ShoeTest {
 
-    public CardDeckTest() {
+    public static void main(String... args) {
+        Shoe<PlayingCard> shoe = new Shoe<>();
+        CardDeck<PlayingCard> deck1 = PlayingCardFactory.getDeck();
+        CardDeck<PlayingCard> deck2 = PlayingCardFactory.getDeck();
+        CardDeck<PlayingCard> deck3 = PlayingCardFactory.getDeck();
+        shoe.addDeck(deck1);
+        shoe.addDeck(deck2);
+        shoe.addDeck(deck3);
+        shoe.finalizeDeck();
+        while (shoe.hasMoreCards()) {
+            ShoeCard<PlayingCard> card = shoe.draw();
+            System.out.println(new StringBuilder("Card: ").append(card.getCard().getPrintableName()).append(" Deck #: ").append(card.getDeckNumber()));
+        }
     }
-
-    @Test
-    public void ensureSeparateDecksAreNotEqual() {
-        CardDeck deck1 = new CardDeck();
-        Assert.assertFalse(deck1.equals(new CardDeck()));
-
-        CardDeck<PlayingCard> standardDeck1 = PlayingCardFactory.getDeck();
-        CardDeck<PlayingCard> standardDeck2 = PlayingCardFactory.getDeck();
-        Assert.assertFalse(standardDeck1.equals(standardDeck2));
-
-        CardDeck<PlayingCard> standardDeck3 = standardDeck1;
-        Assert.assertTrue(standardDeck3.equals(standardDeck1));
-    }
-
 }

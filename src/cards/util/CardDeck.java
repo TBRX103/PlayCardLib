@@ -19,6 +19,7 @@ import cards.Card;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.UUID;
 
 /**
  *
@@ -26,6 +27,8 @@ import java.util.LinkedHashSet;
  * @param <T> Set of Cards
  */
 public class CardDeck<T extends Card> extends LinkedHashSet<T> {
+
+    private final UUID uuid = UUID.randomUUID();
 
     /**
      * Safely handles a deck exception and will return a null card if unable to
@@ -47,7 +50,7 @@ public class CardDeck<T extends Card> extends LinkedHashSet<T> {
         }
         try {
             T card = iterator().next();
-        return card;
+            return card;
         } finally {
             iterator().remove();
         }
@@ -84,4 +87,16 @@ public class CardDeck<T extends Card> extends LinkedHashSet<T> {
 
         addAll(cards);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof CardDeck)) {
+            return false;
+        }
+        return uuid.equals(((CardDeck) obj).uuid);
+    }
+
 }

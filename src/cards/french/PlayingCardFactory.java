@@ -16,10 +16,7 @@
 package cards.french;
 
 import cards.util.CardDeck;
-import java.util.Random;
-import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
-import static java.util.concurrent.ThreadLocalRandom.current;
 
 /**
  *

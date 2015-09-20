@@ -17,10 +17,11 @@ package cards.management;
 
 import cards.Card;
 import cards.util.CardDeck;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  *
@@ -29,8 +30,8 @@ import java.util.LinkedHashSet;
  */
 public final class Shoe<T extends Card> {
 
-    private final LinkedHashSet<CardDeck<T>> cardReferences;
-    private final HashSet<ShoeCard<T>> cards = new HashSet<>();
+    private final ArrayList<CardDeck<T>> cardReferences;
+    private final ArrayList<ShoeCard<T>> cards = new ArrayList<>();
     private HashMap<Integer, CardDeck<T>> deckNumbers = new HashMap<>();
 
     private boolean finalized = false;
@@ -40,16 +41,16 @@ public final class Shoe<T extends Card> {
     }
 
     public Shoe(CardDeck<T> deck) {
-        cardReferences = new LinkedHashSet<>();
+        cardReferences = new ArrayList<>();
         addDeck(deck);
     }
 
-    public Shoe(LinkedHashSet<CardDeck<T>> cards) {
+    public Shoe(ArrayList<CardDeck<T>> cards) {
         this.cardReferences = cards;
     }
 
     public Shoe(Shoe<T> shoe) {
-        this.cardReferences = new LinkedHashSet<>(shoe.cardReferences);
+        this.cardReferences = new ArrayList<>(shoe.cardReferences);
         this.cards.addAll(shoe.cards);
         this.deckNumbers = new HashMap<>(deckNumbers);
         this.finalized = shoe.finalized;
@@ -70,10 +71,6 @@ public final class Shoe<T extends Card> {
 
     }
 
-    public void shuffle(int operations) {
-
-    }
-
     public void finalizeDeck() {
         if (finalized) {
             return;
@@ -85,6 +82,9 @@ public final class Shoe<T extends Card> {
             cards.addAll(createShoeCards(deckNumber, deck));
             deckNumber++;
         }
+        //Do a shuffle.
+
+        Collections.shuffle(cards, ThreadLocalRandom.current());
         finalized = true;
     }
 
@@ -94,5 +94,21 @@ public final class Shoe<T extends Card> {
             shoeCards.add(new ShoeCard(deckNumber, card));
         });
         return shoeCards;
+    }
+
+    public synchronized ShoeCard<T> draw() {
+        if (cards.isEmpty()) {
+            return null;
+        }
+        ShoeCard<T> card = cards.get(0);
+        cards.remove(card);
+        return card;
+    }
+
+    public synchronized boolean hasMoreCards() {
+        if (!finalized) {
+            return false;
+        }
+        return !cards.isEmpty();
     }
 }
